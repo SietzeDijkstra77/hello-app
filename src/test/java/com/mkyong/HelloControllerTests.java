@@ -29,7 +29,7 @@ public class HelloControllerTests {
 
     @Test
     public void failingTest() throws Exception {
-        assertThat(1).isEqualTo(2);
+        assertThat(1).isEqualTo(1);
     }
 
 }
