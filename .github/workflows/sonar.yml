@@ -1,0 +1,59 @@
+name: Run Sonar Analysis
+
+on:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build and analyse
+        env:
+          JWT_ISSUER: the/experts
+          JWT_SECRET: secret
+
+          SERVICE_BUS_PLATFORM: rabbitmq
+          SERVICE_BUS_HOST: queue
+          SERVICE_BUS_PORT: 5672
+          SERVICE_BUS_USER: fake
+          SERVICE_BUS_PASSWORD: fake
+
+          SENDGRID_API_KEY: fake
+          SENDGRID_DEFAULT_SENDER: noreply@fake.com
+
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        working-directory: .
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=hello-app -Dsonar.projectName='Hello World App'
