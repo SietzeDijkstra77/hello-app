@@ -31,6 +31,21 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build and analyze
         env:
+
+      - name: Build and analyse
+        env:
+          JWT_ISSUER: the/experts
+          JWT_SECRET: secret
+
+          SERVICE_BUS_PLATFORM: rabbitmq
+          SERVICE_BUS_HOST: queue
+          SERVICE_BUS_PORT: 5672
+          SERVICE_BUS_USER: fake
+          SERVICE_BUS_PASSWORD: fake
+
+          SENDGRID_API_KEY: fake
+          SENDGRID_DEFAULT_SENDER: noreply@fake.com
+
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
