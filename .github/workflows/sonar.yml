@@ -42,7 +42,7 @@ jobs:
 
           SENDGRID_API_KEY: fake
           SENDGRID_DEFAULT_SENDER: noreply@fake.com
-
+          TEST: test_user
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: echo ${{ secrets.SONAR_HOST_URL }} #mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
